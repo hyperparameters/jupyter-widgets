@@ -8,10 +8,10 @@ from setuptools import setup
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 setup(
-    name="imageviewer",
+    name="jupyter-widgets",
     version="0.1",
-    description="Image Viewer Widget for Jupyter Notebooks",
-    url="https://github.com/hyperparameters/imageviewer",
+    description="Widgets for Jupyter Notebooks",
+    url="https://github.com/hyperparameters/jupyter-widgets",
     author="Tushar Kolhe",
     author_email="tushark.engg@outlook.com",
     license="MIT",
