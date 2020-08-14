@@ -8,7 +8,7 @@ from setuptools import setup
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 setup(
-    name="jupyter-widgets",
+    name="jupyter_widgets",
     version="0.1",
     description="Widgets for Jupyter Notebooks",
     url="https://github.com/hyperparameters/jupyter-widgets",
