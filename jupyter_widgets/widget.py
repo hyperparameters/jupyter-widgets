@@ -2,6 +2,8 @@ import os
 from matplotlib import pyplot as plt
 from ipywidgets import widgets,Layout
 import logging
+from PIL import Image
+import io
 
 class ImageViewer:
     def __init__(self, img_dir):
@@ -29,11 +31,12 @@ class ImageViewer:
         self.button_layout = Layout(width="40px",height="30px")
         
     def create_widgets(self):
-        self.slider = widgets.IntSlider(min=0, max=self._max_iterator-1)
+        max_value = max(self._max_iterator-1,0)
+        self.slider = widgets.IntSlider(min=0, max=max_value)
         self.play = widgets.Play(
                 value=0,
                 min=0,
-                max=self._max_iterator-1,
+                max=max_value,
                 step=1,
                 interval=500,
                 description="Press play",
@@ -52,7 +55,7 @@ class ImageViewer:
         self.folder_selector.observe(self.handle_folder_selector_change, names="value")
         
         #image viewer
-        image_base = self.read_image(0)
+        image_base = self._get_blank_img()
         self.image_viewer = widgets.Image(
                     value=image_base,
                     format='jpg',
@@ -78,6 +81,13 @@ class ImageViewer:
         self.buttons = widgets.HBox([])
         self.vbox = widgets.VBox([self.folder_selector,self.image_viewer,self.seek_bar,self.buttons])
         return self.vbox
+    
+    def _get_blank_img(self):
+        img = Image.new('RGB', (25, 25))
+        imgByteArr = io.BytesIO()
+        img.save(imgByteArr, format='PNG')
+        imgByteArr = imgByteArr.getvalue()
+        return imgByteArr
     
     def read_image(self, ind):
         path = self.img_paths[ind]
@@ -107,7 +117,7 @@ class ImageViewer:
         
     def handle_slider_change(self, change):
         ind = change.new
-        self._logger.debug(f"slider change {ind}")
+        print(f"slider change {ind}, max {self._max_iterator}")
         if self._max_iterator>0:       
             if ind >= self._max_iterator:
                 ind = 0
@@ -118,6 +128,7 @@ class ImageViewer:
         
     def handle_folder_selector_change(self, change):
         folder = change.new
+        print(f"folder change {folder}")
         if folder:
             if folder != "..":
 
@@ -127,6 +138,9 @@ class ImageViewer:
 
             self.img_paths, self._max_iterator = self._get_image_paths(new_directory)
             self.img_dir = new_directory
+            max_value = max(self._max_iterator-1,0)
+            self.slider.max = max_value
+            self.play.max = max_value
             self.slider.value=1
             self.slider.value=0
             self.folder_selector.unobserve(self.handle_folder_selector_change, names="value")
