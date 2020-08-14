@@ -10,3 +10,10 @@ iv = ImageViewer("./path/to/image/directory")
 iv.display()
 ```
 ![demo](./resources/imageviewer.gif)
+
+
+## Installation
+
+``` 
+pip install git+https://github.com/hyperparameters/jupyter-widgets.git
+```
